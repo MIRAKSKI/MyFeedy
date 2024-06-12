@@ -83,12 +83,15 @@
 <script>
     /*
     for (let i=0; i < 10; i++) {
-            window.localStorage.setItem("stgitem" +i, "");
+        for (let j=0; j < 50; j++) {
+            window.localStorage.setItem("stgitem"+i+ "," + j, "");
+        }
+            window.localStorage.setItem("peaces" +i, "");
             window.localStorage.getItem("sttitem" +i, "");
             postlength += 1;
             window.localStorage.setItem("stglength", 0);
-         }
-    */
+        }
+        //*/
     var prfpic = "1.jpg";
     var stgarrey = [],postlength = 0;
     var sttarrey = [],file,base64String,pic=1;
@@ -96,9 +99,17 @@
     var stglength = 0;
       if (typeof(Storage) !== "undefined") {
         stglength = window.localStorage.getItem("stglength");
-        postlength = stglength;
+        postlength = eval(stglength);
         for (let i=0; i < stglength; i++) {
-            stgarrey[i] = window.localStorage.getItem("stgitem"+i);
+            peaces = window.localStorage.getItem("peaces" + i);
+            for (let j =0 ; j < peaces ; j++) {
+                if (j == 0) {
+                    stgarrey[i] = window.localStorage.getItem("stgitem" + i +"," +j);
+                }
+                else {
+                    stgarrey[i] += window.localStorage.getItem("stgitem" + i +"," +j);
+                }
+            }
             sttarrey[i] = window.localStorage.getItem("sttitem"+i);
             recoverfeed(stgarrey[i], sttarrey[i]);
         }
@@ -108,21 +119,45 @@
         if (img!= "" && txt!= "") {
             stgarrey[stgarrey.length] = img;
             sttarrey[sttarrey.length] = txt;
-            window.localStorage.setItem("stgitem" +postlength, img);
-            window.localStorage.getItem("sttitem" +postlength, txt);
+            peaces = Math.ceil((img.length)/39000);
+            start = 0; end = 39000;
+            for (let i = 0; i < peaces; i++) {
+                var image = img.slice(start, end);
+                start += 39000; end += 39000;
+                if (start >= img.length) {
+                    continue;
+                }
+                if (end > img.length) {
+                    end = img.length;
+                }
+                pointer = postlength + "," + i
+                window.localStorage.setItem("stgitem" + pointer , image);
+            }
+            window.localStorage.setItem("peaces" +postlength, peaces);
+            window.localStorage.setItem("sttitem" +postlength, txt);
             postlength += 1;
-            window.localStorage.setItem("stglength", postlength);
         }
         else if (img!= "") {
-            stgarrey[stgarrey.length] = img;
-            window.localStorage.setItem("stgitem"+postlength, img);
+            peaces = Math.ceil((img.length)/39000);
+            start = 0; end = 39000;
+            for (let i = 0; i < peaces; i++) {
+                var image = image.slice(start, end);
+                start += 39000; end += 39000;
+                if (end > img.length) {
+                    end = img.length
+                }
+                pointer = postlength + "," + i
+                window.localStorage.setItem("stgitem" + pointer , image);
+            }
+            window.localStorage.setItem("peaces" +postlength, peaces);
         postlength += 1;
         }
         else if (txt!="") {
             sttarrey[sttarrey.length] = txt;
-            window.localStorage.getItem("sttitem"+postlength, txt);
+            window.localStorage.setItem("sttitem"+postlength, txt);
         postlength += 1;
         }
+        window.localStorage.setItem("stglength", postlength);
     }
     function getpic(files) {
         file = files[0];
@@ -272,4 +307,4 @@ function creatanelemn(kng, clss, id, name, style, title, type, value, elem, oncl
   return kingbck
 }
 </script>
-    </html>
+            </html>
