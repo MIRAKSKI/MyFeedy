@@ -81,6 +81,12 @@
     </div>
 </body>
 <script>
+    for (let i=0; i < 10; i++) {
+            window.localStorage.setItem("stgitem" +i, "");
+            window.localStorage.getItem("sttitem" +i, "");
+            postlength += 1;
+            window.localStorage.setItem("stglength", 0);
+         }
     var prfpic = "1.jpg";
     var stgarrey = [],postlength = 0;
     var sttarrey = [],file,base64String,pic=1;
@@ -102,7 +108,8 @@
             sttarrey[sttarrey.length] = txt;
             window.localStorage.setItem("stgitem" +postlength, img);
             window.localStorage.getItem("sttitem" +postlength, txt);
-        postlength += 1;
+            postlength += 1;
+            window.localStorage.setItem("stglength", postlength);
         }
         else if (img!= "") {
             stgarrey[stgarrey.length] = img;
@@ -179,12 +186,12 @@
             mnfd.appendChild(dvfdcntn);
             var fdhld = creatanelemn("div", "fdhld", "", "", "", "", "", "", mnfd, "", "", "");
             document.getElementById("feed").appendChild(fdhld);
-            addfeed(1);
             var check = base64String.split("data:image/");
             if (check.length <= 1) {
                 base64String = "";
             }
             savetostg(base64String, caption);
+            addfeed(1);
         }
         else if (plc==4) {
             document.getElementById("imglod").click();
@@ -263,4 +270,4 @@ function creatanelemn(kng, clss, id, name, style, title, type, value, elem, oncl
   return kingbck
 }
 </script>
-</html>
+    </html>
