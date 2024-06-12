@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedy</title>
+    <style>
+        html {margin:0px; height:100%; padding:0px;overflow: hidden;}
+        body {margin:0px; height:100%; padding:0px;overflow: hidden;}
+        .home {display:block;color:black;height:100%;overflow: hidden;width:100%; margin:0px; justify-content:center;}
+        .head {width:100%; height:10%;border-bottom:1px solid red; background-color: white;display:flex; justify-content:space-around;align-items: center}
+        .feed {width:100%;height:80%; background-color: white; display:grid; overflow: scroll;}
+        .foot {width:100%;height:10%;border-top:1px solid red;background-color:white; display:flex; justify-content:space-around;align-items: center;}
+        .adbgfd {background-color:rgba(50,50,50,0.3); backdrop-filter: blur(10px); position: absolute;top:0px; left:0px; height:100%;width:100%; display:none;align-items: center;justify-content: space-around; transation: 1s;}
+        .testy {height:80%;width:80%; background-color: white;border-radius:10px;display:block;}
+        .addbt {border-radius:50%;border:3px solid black;width:50px;height:50px;text-align:center; margin:2px;font-size:23px; color:black; background-color: transparent;}
+        .pointers {width:100; height:12%;display:flex; justify-content:space-around;align-items: center;}
+        .adder {border-top:1px solid black;border-bottom:1px solid black; width:100%; height:76%;}
+        .btndiv {width:30%; height:100%;display:flex;align-items: center;justify-content: space-around}
+        .btndiv input {width: 100%;text-align: center;border:none; background-color: transparent;}
+        .Sharefeed {width: 50%;text-align: center;border:none; background-color: rgba(220,220,220,0.5); padding:5px; border-radius:8px;}
+        .picadd {width:100%; height:40%;display:flex; justify-content:space-around;align-items: center;}
+        .txtadd {width:100%; height:60%;display:flex; justify-content:space-around;align-items: center;}
+        .forimg {width:80%; height:80%;border:none; background-color:rgba(220,220,220,0.5);background-size: cover;background-position: center;background-repeat: no-repeat;}
+        .fortxt {width:80%; height:80%;border:rgba(50,50,50,0.9) ;background-color:rgba(220,220,220,0.5); text-align: center;}
+        .fdhed img {border-radius:50%; margin:11px;width:50px; height:50px;background-size: cover;background-position: center;background-repeat: no-repeat;}
+        .fdhed p {margin:0px;}
+        .fdhed {display:flex;align-items:center; width:100%;border-bottom:1px solid black;}
+        .fdcntn p {width:97%;text-align:left;margin-left:5px;}
+        .fdcntn img {width:100%;}
+        .fdcntn {width:95%; display:grid;}
+        .dvfdcntn {width:100%; display:flex;justify-content:space-around;}
+        .mnfd {width:95%;}
+        .fdhld {width:100%;display:flex;justify-content:space-around}
+    </style>
+</head>
+<body>
+    <div class="home">
+        <div class="head">
+            <p>Feedy</p>
+        </div>
+        <div class="feed" id="feed">
+            <!-- feed -->
+            <!--  -->
+            <!--  -->
+            
+            <!--  -->
+            <!--  -->
+            <!--  -->
+        </div>
+        <div class="foot">
+            <input class="addbt" type="button" value="+" onclick="addfeed(0)"></input>
+        </div>
+    </div>
+    <div class="adbgfd" id="adbgfd">
+        <div class="testy">
+            <div class="pointers">
+                <div class="btndiv"></div>
+                <div class="btndiv">
+                    <p>Add a Feed</p>
+                </div>
+                <div class="btndiv">
+                    <input type="button" onclick="addfeed(1)" value="X">
+                </div>
+            </div>
+            <div class="adder">
+                <!-- add pictures or text or both -->
+                <div class="picadd">
+                    <input class="forimg" type="button" value="Add Image" onclick="addfeed(4)" id="overflower">
+                </div>
+                <div class="txtadd">
+                    <input class="fortxt" type="text" placeholder="Add Caption!" id="textgetter" value="">
+                </div>
+            </div>
+            <div class="pointers">
+                <input class="Sharefeed" type="button" onclick="addfeed(2)" value="Share">
+            </div>
+        </div>
+    </div>
+    <div style="display:none;">
+        <input type="file" onchange="getpic(this.files)" id="imglod">
+    </div>
+</body>
+<script>
+    var prfpic = "1.jpg";
+    var stgarrey = [],postlength = 0;
+    var sttarrey = [],file,base64String,pic=1;
+    //get storage
+    var stglength = 0;
+      if (typeof(Storage) !== "undefined") {
+        stglength = window.localStorage.getItem("stglength");
+        postlength = stglength;
+        for (let i=0; i < stglength; i++) {
+            stgarrey[i] = window.localStorage.getItem("stgitem"+i);
+            sttarrey[i] = window.localStorage.getItem("sttitem"+i);
+            recoverfeed(stgarrey[i], sttarrey[i]);
+        }
+      }
+      else {}
+    function savetostg(img, txt) {
+        if (img!= "" && txt!= "") {
+            stgarrey[stgarrey.length] = img;
+            sttarrey[sttarrey.length] = txt;
+            window.localStorage.setItem("stgitem" +postlength, img);
+            window.localStorage.getItem("sttitem" +postlength, txt);
+        postlength += 1;
+        }
+        else if (img!= "") {
+            stgarrey[stgarrey.length] = img;
+            window.localStorage.setItem("stgitem"+postlength, img);
+        postlength += 1;
+        }
+        else if (txt!="") {
+            sttarrey[sttarrey.length] = txt;
+            window.localStorage.getItem("sttitem"+postlength, txt);
+        postlength += 1;
+        }
+    }
+    function getpic(files) {
+        file = files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    base64String = e.target.result;
+                    pic=0;
+                    document.getElementById("overflower").style.backgroundImage = "url('" + base64String + "')";
+                    document.getElementById("overflower"). value ="";
+                };
+                reader.readAsDataURL(file);
+            }
+    }
+    function addfeed (plc) {
+        if (plc==0) {
+            document.getElementById("adbgfd").style.display = "flex";
+        }
+        else if (plc==1) {
+            document.getElementById("adbgfd").style.display = "none"; pic =1;
+            //document.getElementById().
+            document.getElementById("textgetter").value= "";
+            document.getElementById("overflower").style.backgroundImage = "";
+                    document.getElementById("overflower"). value ="Add Image";
+        }
+        else if (plc==2) {
+            var caption = "";
+            caption = document.getElementById("textgetter").value;
+            var fdcntn = creatanelemn("div", "fdcntn", "", "", "", "", "", "", "", "", "", "");
+            //visual content
+            var img = creatanelemn("img", "", "", "", "", "","", "", "", "", "", "");
+            if (caption == "" || caption==" ") {
+                //check if there is pic
+                if (pic == 0) {
+                    img.setAttribute('src', base64String);
+                    fdcntn.appendChild(img);
+                }
+                else {
+                    //throw an error
+                    addfeed(1);
+                    return;
+                }
+            }
+            else {
+                //writen content 
+                var text = creatanelemn("p", "", "", "", "", "", "", "", "", "", "", caption);
+                fdcntn.appendChild(text);
+                //check if there is pic
+                if (pic == 0) {
+                    img.setAttribute('src', base64String);
+                    fdcntn.appendChild(img);
+                }
+            }
+            //head 
+            var nm = creatanelemn("p","", "", "", "", "", "", "","","","", "Karim khelfaoui");
+            var icn = creatanelemn("img","","","", "", "","","","","","","");
+            icn.style.backgroundImage = "url('" + prfpic + "')";
+            icn.setAttribute('src', prfpic);
+            var fdhed = creatanelemn("div", "fdhed", "", "", "", "", "", "", icn, "","","");
+            fdhed.appendChild(nm);
+            var mnfd = creatanelemn("div", "mnfd", "", "", "", "", "", "", fdhed, "", "", "");
+            var dvfdcntn = creatanelemn("div", "dvfdcntn", "", "", "", "", "", "", fdcntn, "", "", "");
+            mnfd.appendChild(dvfdcntn);
+            var fdhld = creatanelemn("div", "fdhld", "", "", "", "", "", "", mnfd, "", "", "");
+            document.getElementById("feed").appendChild(fdhld);
+            addfeed(1);
+            var check = base64String.split("data:image/");
+            if (check.length <= 1) {
+                base64String = "";
+            }
+            savetostg(base64String, caption);
+        }
+        else if (plc==4) {
+            document.getElementById("imglod").click();
+        }
+    }
+    function recoverfeed(stgarrey, sttarrey) {
+        var caption = sttarrey;
+            var fdcntn = creatanelemn("div", "fdcntn", "", "", "", "", "", "", "", "", "", "");
+            //visual content
+            var img = creatanelemn("img", "", "", "", "", "","", "", "", "", "", "");
+            if (caption == "") {
+                //check if there is pic
+                if (stgarrey !="") {
+                    img.setAttribute('src', stgarrey);
+                    fdcntn.appendChild(img);
+                }
+            }
+            else {
+                //writen content 
+                var text = creatanelemn("p", "", "", "", "", "", "", "", "", "", "", caption);
+                fdcntn.appendChild(text);
+                //check if there is pic
+                if (stgarrey != "") {
+                    img.setAttribute('src', stgarrey);
+                    fdcntn.appendChild(img);
+                }
+            }
+            //head 
+            var nm = creatanelemn("p","", "", "", "", "", "", "","","","", "Karim khelfaoui");
+            var icn = creatanelemn("img","","","", "", "","","","","","","");
+            icn.setAttribute('src', prfpic);
+            var fdhed = creatanelemn("div", "fdhed", "", "", "", "", "", "", icn, "","","");
+            fdhed.appendChild(nm);
+            var mnfd = creatanelemn("div", "mnfd", "", "", "", "", "", "", fdhed, "", "", "");
+            var dvfdcntn = creatanelemn("div", "dvfdcntn", "", "", "", "", "", "", fdcntn, "", "", "");
+            mnfd.appendChild(dvfdcntn);
+            var fdhld = creatanelemn("div", "fdhld", "", "", "", "", "", "", mnfd, "", "", "");
+            document.getElementById("feed").appendChild(fdhld);
+    }
+    
+function creatanelemn(kng, clss, id, name, style, title, type, value, elem, onclick, disabled, innertext) {
+  const kingbck = document.createElement(kng)
+  if (clss != "") {
+    kingbck.classList.add(clss);
+  }
+  if (id != "") {
+    kingbck.setAttribute('id', id);
+  }
+  if (name != "") {
+    kingbck.setAttribute('name', name);
+  }
+  if (style != "") {
+    kingbck.setAttribute('style', style);
+  }
+  if (title != "") {
+    kingbck.setAttribute('title', title);
+  }
+  if (type != "") {
+    kingbck.setAttribute('type', type);
+  }
+  if (value != "") {
+    kingbck.setAttribute('value', value);
+  }
+  if (onclick != "") {
+    kingbck.setAttribute('onclick', onclick);
+  }
+  if (disabled != "") {
+    kingbck.setAttribute('disabled', disabled);
+  }
+  if (innertext != "") {
+    kingbck.innerText = innertext;
+  }
+  if (elem != "") {
+    kingbck.appendChild(elem);
+  }
+  return kingbck
+}
+</script>
+</html>
